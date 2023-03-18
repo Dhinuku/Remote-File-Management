@@ -83,7 +83,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+The new remote file management software is an innovative solution that offers advanced file organization, server-side compression, and scalability. It allows users to efficiently manage their files with customizable folders and tags, as well as advanced search capabilities that make it easy to find specific files. Additionally, the server-side compression feature helps reduce the storage requirements for files, freeing up space and increasing efficiency.
+
+In comparison to market leaders in this space, such as Dropbox and Google Drive, the new software offers a more comprehensive file organization and search functionality, as well as an innovative server-side compression feature that significantly reduces storage requirements. Furthermore, the software's scalability allows it to be used by individual users as well as cloud service providers, making it an ideal solution for businesses of all sizes.
+
+The new software offers users a range of features that provide greater flexibility and control over their file management processes. With customizable folders and tags, users can easily organize and access their files, while the advanced search capabilities make it easy to find what they need quickly. The server-side compression feature provides an added layer of efficiency, reducing the storage requirements for files and freeing up valuable space.
+
+Overall, the new remote file management software offers a comprehensive solution for file management that is both scalable and user-friendly. Its advanced file organization and search functionality, combined with server-side compression, make it a competitive player in the market, offering a compelling alternative to current market leaders.
 
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
@@ -93,7 +99,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
+* [![Flask][Flask.py]][Flask-url]
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url]
 * [![Angular][Angular.io]][Angular-url]
@@ -229,19 +235,5 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Flask]:data:image/png;base64,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
 [Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
