@@ -100,13 +100,9 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 ### Built With
 
 * [![Flask][Flask.py]][Flask-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Tailwind][Tailwind.css]][Tailwind-url]
+* [![Python][Python.py]][Python-url]
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -235,5 +231,9 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
-[Flask]:data:image/png;base64,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
-[Next-url]: https://nextjs.org/
+[Flask.py]: https://img.shields.io/badge/Flask-FFFFFF?style=for-the-badge&logo=flask&logoColor=black
+[Flask-url]: https://flask.palletsprojects.com/en/2.2.x/
+[Tailwind.css]:https://img.shields.io/badge/tailwind-1E2F97?style=for-the-badge&logo=tailwindcss&logoColor=blue
+[Tailwind-url]:https://tailwindcss.com/
+[Python.py]:	https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://docs.python.org/3/
