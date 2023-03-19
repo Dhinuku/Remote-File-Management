@@ -34,10 +34,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">Remote File Management Software</h3>
 
   <p align="center">
-    project_description
+    A remote file management software is a computer program that allows users to manage and access their files remotely from a computer or other device over a network or the internet.
     <br />
     <a href="https://github.com/Dhinuku/Remote-File-Management"><strong>Explore the docs »</strong></a>
     <br />
