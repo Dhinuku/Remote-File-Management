@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2.9.1/dist/umd/popper.min.js" charset="utf-8"></script>
+<script>
+function main(){
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','filedata');
+    xhr.onload=function(){
+    var json=JSON.parse(this.responseText);
+    var out='';
+    for(i=0;i<json.length-1;i++){
+    if(json[i].type!="folder")
+    out+='<div onclick="openfile(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    else
+    out+='<div onclick="foldah(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    }
+    document.getElementById("info").innerHTML=out;
+    }
+    xhr.send();
+}
+function openfile(x){
+    history.pushState({},"","");
+    document.getElementById("info").innerHTML='';
+    document.getElementById("info1").innerHTML='<iframe src="'+x+'" width="100%" height="'+(80/100)*window.innerHeight+'px">';
+}
+function foldah(x){
+    history.pushState({},"","");
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET',x);
+    xhr.onload=function(){
+    var json=JSON.parse(this.responseText);
+    var out='';
+    for(i=0;i<json.length-1;i++){
+    if(json[i].type!="folder")
+    out+='<div onclick="openfile(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    else
+    out+='<div onclick="foldah(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    }
+    document.getElementById("info").innerHTML=out;
+    }
+    xhr.send();
+}
+window.onload=main;
+window.onpopstate = function(e){
+    document.getElementById("info1").innerHTML='';
+    main();
+};
+function getFileIcon(extension) {
+  const fileTypes = {
+    txt: 'fa-file-alt text-gray-500',
+    pdf: 'fa-file-pdf text-red-500',
+    doc: 'fa-file-word text-blue-500',
+    docx: 'fa-file-word text-blue-500',
+    xls: 'fa-file-excel text-green-500',
+    xlsx: 'fa-file-excel text-green-500',
+    ppt: 'fa-file-powerpoint text-orange-500',
+    pptx: 'fa-file-powerpoint text-orange-500',
+    jpg: 'fa-file-image text-yellow-500',
+    jpeg: 'fa-file-image text-yellow-500',
+    png: 'fa-file-image text-yellow-500',
+    gif: 'fa-file-image text-yellow-500',
+    mp4: 'fa-file-video text-purple-500',
+    mp3: 'fa-file-audio text-pink-500',
+    zip: 'fa-file-archive text-gray-500',
+    rar: 'fa-file-archive text-gray-500',
+    js: 'fa-file-code text-yellow-500',
+    html: 'fa-file-code text-yellow-500',
+    css: 'fa-file-code text-yellow-500',
+    php: 'fa-file-code text-yellow-500',
+    py: 'fa-file-code text-yellow-500',
+    json: 'fa-file-code text-yellow-500',
+    csv: 'fa-file-code text-yellow-500',
+    xml: 'fa-file-code text-yellow-500',
+    sql: 'fa-file-code text-yellow-500'
+    // Add more file types as needed
+  };
+  console.log(extension);
+  return fileTypes[extension] || 'fa-file-fun text-red-700';
+}
+
+</script>
+<body class="flex h-screen bg-gray-900 text-white">
+<div class="flex flex-col flex-1 w-full overflow-y-auto">
+    <header class="z-10 py-4 lg:h-20 h-28 bg-gray-950">
+        <div class="container flex items-center justify-between h-full px-6 mx-auto">
+        <div onclick="window.location.href='signout';" class="hover:cursor-pointer absolute right-4">
+            <i class="lg:hidden fa-4x fa-solid fa-right-from-bracket"></i><i class="hidden lg:inline fa-solid fa-right-from-bracket"></i>
+            <div class="hidden lg:inline">Sign Out</div>
+        </div>
+        </div>
+    </header>
+    <div id="full" class="h-full overflow-y-auto">
+    <div id="info0" class="h-10 drop-shadow-md border-black border-b"></div>
+    <div id="info" class="m-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    <div id="info1" class="p-4"></div>
+    </div>
+</div>
+</body>
+</html>
