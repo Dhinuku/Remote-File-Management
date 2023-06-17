@@ -1,31 +1,5 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
--->
 
 <!-- PROJECT LOGO -->
 <br />
@@ -93,8 +67,6 @@ In comparison to market leaders in this space, such as Dropbox and Google Drive,
 The new software offers users a range of features that provide greater flexibility and control over their file management processes. With customizable folders and tags, users can easily organize and access their files, while the advanced search capabilities make it easy to find what they need quickly. The server-side compression feature provides an added layer of efficiency, reducing the storage requirements for files and freeing up valuable space.
 
 Overall, the new remote file management software offers a comprehensive solution for file management that is both scalable and user-friendly. Its advanced file organization and search functionality, combined with server-side compression, make it a competitive player in the market, offering a compelling alternative to current market leaders.
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
