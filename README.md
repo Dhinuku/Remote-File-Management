@@ -139,8 +139,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Implementation and Architecture
-
+# Implementation 
+## Architecture
+<img src="ARCH DIG.png">
+  <br><hr>
 Developing a complete remote file management software involves multiple components and
 functionalities. Here is a high-level overview of the implementation steps and features that can
 be included:
@@ -178,8 +180,11 @@ and delete files and folders.
 
 
 ## File Compression
+<img src="deflate_process.png">
+  <br><hr>
 File compression is implemented by using the zlib algorithm, which is a widely used compression algorithm that provides lossless data compression.At its core, zlib uses the DEFLATE
 algorithm, which combines LZ77 (a sliding window compression algorithm) and Huffman coding (a variable-length prefix coding algorithm).Steps involved in zlib compression:
+
 ### Deflate Compression
 1. The data to be compressed is divided into a series of blocks.
 2. Within each block, LZ77 compression is applied to find repeated sequences of data. Instead
