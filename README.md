@@ -11,7 +11,7 @@
   <p align="center">
     A remote file management software is a computer program that allows users to manage and access their files remotely from a computer or other device over a network or the internet.
     <br />
-    <a href="https:rfms.pythonanywhere.com"><strong>Demo »</strong></a>
+    <a href="https://rfms.pythonanywhere.com"><strong>Demo »</strong></a>
     <br />
     <br />
     <!--
