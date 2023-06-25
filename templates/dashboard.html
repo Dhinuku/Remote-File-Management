@@ -3,55 +3,255 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Dashboard</title>
 </head>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://unpkg.com/@popperjs/core@2.9.1/dist/umd/popper.min.js" charset="utf-8"></script>
 <script>
+var forward_queue=[];
+var backward_queue=[];
+var json;
+var avoid=1;
+var view='grid';
+var path='{{user}}\'s_Disk:';
+function setDataGrid(){
+    var out='';
+    for(i=0;i<json.length-1;i++){
+    if(json[i].type!="folder")
+    if(!mobilecheck())
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-28 lg:h-16 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" index="'+i+'" path="'+json[i].path+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical" index="'+i+'" type="'+json[i].type+'" path="'+json[i].path+'"></i></div>';
+    else
+    out+='<div class="grid grid-rows-1 relative gap-4 p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50"><div oncontextmenu="showContextSubMenu(event,this)" class="h-48 flex items-center justify-center" path="'+json[i].path+'" type="'+json[i].type+'" index="'+i+'"><i onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="file fas '+getFileIcon(json[i].type.slice(1))+' fa-10x mr-4"></i></div><div><div onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="text-2xl h-10 w-72 flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="absolute right-4 bottom-8 fa-solid fa-ellipsis-vertical fa-2x" index="'+i+'" type="'+json[i].type+'" path="'+json[i].path+'"></i></div></div>';
+    else
+    if(!mobilecheck())
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-28 lg:h-16 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" path="'+json[i].path+'" type="'+json[i].type+'" index="'+i+'"><i onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');" class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');"  class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical" path="'+json[i].path+'" index="'+i+'" type="'+json[i].type+'"></i></div>';
+    else
+    out+='<div class="grid grid-rows-1 relative gap-4 p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50"><div oncontextmenu="showContextSubMenu(event,this)" class="h-48 flex items-center justify-center" path="'+json[i].path+'" index="'+i+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');" class="folder fas fa-folder text-blue-500 fa-10x mr-4"></i></div><div><div onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');"  class="text-2xl  h-10 w-72 flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="absolute right-4 bottom-8 fa-solid fa-ellipsis-vertical fa-2x" path="'+json[i].path+'" index="'+i+'" type="'+json[i].type+'"></i></div></div>';
+    }
+    if(!mobilecheck()){
+    document.getElementById("info").innerHTML=out;
+    document.getElementById("infomob").innerHTML="";
+    document.getElementById("infolist").innerHTML="";
+    }
+    else{
+    document.getElementById("infomob").innerHTML=out;
+    document.getElementById("info").innerHTML="";
+    document.getElementById("infolist").innerHTML="";
+    }
+}
+function setDataList(){
+    var out='';
+    for(i=0;i<json.length-1;i++){
+    if(json[i].type!="folder")
+    if(!mobilecheck())
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-28 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" index="'+i+'" path="'+json[i].path+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical" type="'+json[i].type+'" path="'+json[i].path+'" index="'+i+'"></i></div>';
+    else
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-36 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" index="'+i+'" path="'+json[i].path+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="file fas '+getFileIcon(json[i].type.slice(1))+' text-5xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';openfile(\'openfile/'+json[i].path+'\');" class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical fa-2x" type="'+json[i].type+'" path="'+json[i].path+'" index="'+i+'"></i></div>';
+    else
+    if(!mobilecheck())
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-28 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" index="'+i+'" path="'+json[i].path+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');" class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');"  class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical" path="'+json[i].path+'" type="'+json[i].type+'" index="'+i+'"></i></div>';
+    else
+    out+='<div oncontextmenu="showContextSubMenu(event,this)" class="h-36 flex items-center p-4 bg-white rounded shadow-md hover:cursor-pointer hover:bg-cyan-50" index="'+i+'" path="'+json[i].path+'" type="'+json[i].type+'"><i onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');" class="folder fas fa-folder text-blue-500 text-5xl mr-4"></i><div onclick="path+=\'/'+json[i].name+'\';foldah(\'filedat/'+json[i].path+'\');"  class="text-xl lg:text-base flex-grow truncate">'+json[i].name+'</div><i onclick="showContextSubMenu(event,this)" class="fa-solid fa-ellipsis-vertical fa-2x" path="'+json[i].path+'" type="'+json[i].type+'" index="'+i+'"></i></div>';
+    }
+    document.getElementById("infomob").innerHTML="";
+    document.getElementById("info").innerHTML="";
+    document.getElementById("infolist").innerHTML=out;
+}
+function backward(){
+    if(backward_queue.length>1){
+    avoid=0;
+    path=backward_queue[backward_queue.length-2][2];
+    backward_queue[backward_queue.length-2][0](backward_queue[backward_queue.length-2][1]);
+    avoid=1
+    forward_queue.push([backward_queue[backward_queue.length-1][0],backward_queue[backward_queue.length-1][1],backward_queue[backward_queue.length-1][2]]);
+    backward_queue.splice(-1);
+    document.getElementById('forward').classList.remove('grayscale');
+    if(backward_queue.length<=1)
+    document.getElementById('backward').classList.add('grayscale');
+    }
+    else
+    {
+    document.getElementById('backward').classList.add('grayscale');
+    }
+}
+function forward(){
+    if(forward_queue.length>0){
+    avoid=0
+    path=forward_queue[forward_queue.length-1][2]
+    forward_queue[forward_queue.length-1][0](forward_queue[forward_queue.length-1][1]);
+    avoid=1
+    backward_queue.push([forward_queue[forward_queue.length-1][0],forward_queue[forward_queue.length-1][1],forward_queue[forward_queue.length-1][2]]);
+    forward_queue.splice(-1);
+    if(forward_queue.length==0)
+    document.getElementById('forward').classList.add('grayscale');
+    }
+    else
+    {
+    document.getElementById('forward').classList.add('grayscale');
+    }
+}
+function mobilecheck() {
+  let check = false;
+  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+  return check;
+};
 function main(){
+    if(avoid)
+    backward_queue.push([main,null,path]);
     var xhr=new XMLHttpRequest();
     xhr.open('GET','filedata');
     xhr.onload=function(){
-    var json=JSON.parse(this.responseText);
-    var out='';
-    for(i=0;i<json.length-1;i++){
-    if(json[i].type!="folder")
-    out+='<div onclick="openfile(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    json=JSON.parse(this.responseText);
+    if(view=='grid')
+    setDataGrid();
     else
-    out+='<div onclick="foldah(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    setDataList();
     }
-    document.getElementById("info").innerHTML=out;
+    xhr.send();
+    signincheck();
+    path='{{user}}\'s_Disk:';
+    document.getElementById("info1").innerHTML='';
+        if(mobilecheck())
+    {
+    document.getElementById('alertbox').style.zoom=2;
+    document.getElementById('contextMenu').style.zoom=2;
+    document.getElementById('contextMenuItem').style.zoom=2;
+    }
+    document.getElementById('pathway').value=path;
+}
+function signincheck(){
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','sign-in-check');
+    xhr.onload=function(){
+    if(this.status==200){
+    if(this.responseText==0)
+    {
+    document.body.className='bg-gradient-to-br from-[#435f70] via-[#1c3848] to-[#15242d] relative flex items-center justify-center min-h-screen';
+    document.body.innerHTML='<!DOCTYPE html>'+
+'<html lang="en">'+
+'<head>'+
+  '<meta charset="UTF-8">'+
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
+  '<meta http-equiv="X-UA-Compatible" content="ie=edge">'+
+ '<title>Logged Out</title>'+
+'</head>'+
+'<body>'+
+  '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">'+
+    '<h1 class="text-white font-bold text-6xl tracking-wide leading-tight text-shadow">LOGGED OUT</h1>'+
+    '<h4 class="text-gray-200 font-normal text-xl mt-4">Please Login to continue</h4>'+
+
+    '<a href="/login" class="block mt-6 px-8 py-4 bg-indigo-900 text-white font-medium text-lg rounded-lg shadow-md">LOGIN</a>'+
+  '</div>'+
+'</body>'+
+'</html>';
+    }
+    }
+    else
+{
+    document.body.className='bg-gradient-to-br from-[#435f70] via-[#1c3848] to-[#15242d] relative flex items-center justify-center min-h-screen';
+    document.body.innerHTML='<!DOCTYPE html>'+
+'<html lang="en">'+
+'<head>'+
+  '<meta charset="UTF-8">'+
+  '<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
+  '<meta http-equiv="X-UA-Compatible" content="ie=edge">'+
+ '<title>Logged Out</title>'+
+'</head>'+
+'<body>'+
+  '<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">'+
+    '<h1 class="text-white font-bold text-6xl tracking-wide leading-tight text-shadow">OFFLINE</h1>'+
+    '<h4 class="text-gray-200 font-normal text-xl mt-4">Cannot connect to server</h4>'+
+
+    '<a href="." class="block mt-6 px-8 py-4 bg-indigo-900 text-white font-medium text-lg rounded-lg shadow-md">RETRY</a>'+
+  '</div>'+
+'</body>'+
+'</html>';
+}
     }
     xhr.send();
 }
+
 function openfile(x){
-    history.pushState({},"","");
+    if(avoid)
+    backward_queue.push([openfile,x,path]);
+    document.getElementById('backward').classList.remove('grayscale');
+    document.getElementById('pathway').value=path;
     document.getElementById("info").innerHTML='';
+    document.getElementById("infomob").innerHTML='';
+    document.getElementById("infolist").innerHTML='';
     document.getElementById("info1").innerHTML='<iframe src="'+x+'" width="100%" height="'+(80/100)*window.innerHeight+'px">';
 }
 function foldah(x){
-    history.pushState({},"","");
+    if(avoid)
+    backward_queue.push([foldah,x,path]);
+    document.getElementById('backward').classList.remove('grayscale');
     var xhr=new XMLHttpRequest();
     xhr.open('GET',x);
     xhr.onload=function(){
-    var json=JSON.parse(this.responseText);
-    var out='';
-    for(i=0;i<json.length-1;i++){
-    if(json[i].type!="folder")
-    out+='<div onclick="openfile(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="file fas '+getFileIcon(json[i].type.slice(1))+' text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
+    json=JSON.parse(this.responseText);
+    if(view=='grid')
+    setDataGrid();
     else
-    out+='<div onclick="foldah(\''+json[i].path+'\');" class="flex items-center p-4 bg-gray-800 rounded shadow hover:bg-gray-700"><i class="folder fas fa-folder text-blue-500 text-3xl mr-4"></i><div class="flex-grow truncate">'+json[i].name+'</div></div>';
-    }
-    document.getElementById("info").innerHTML=out;
+    setDataList();
     }
     xhr.send();
-}
-window.onload=main;
-window.onpopstate = function(e){
+    document.getElementById('pathway').value=path;
     document.getElementById("info1").innerHTML='';
-    main();
+}
+function search(x){
+    path='Search:'+x;
+    if(avoid)
+    backward_queue.push([search,x,path]);
+    document.getElementById('backward').classList.remove('grayscale');
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','/search/'+x);
+    xhr.onload=function(){
+    json=JSON.parse(this.responseText);
+    if(view=='grid')
+    setDataGrid();
+    else
+    setDataList();
+    }
+    xhr.send();
+    document.getElementById('pathway').value=path;
+    document.getElementById("info1").innerHTML='';
+}
+
+function sortFile(e){
+path='Sort:'+e;
+if(avoid)
+backward_queue.push([sortFile,e,path]);
+document.getElementById('backward').classList.remove('grayscale');
+if(e.value!="")
+{
+const jsonData = JSON.stringify(getCommonExtensions(e));
+
+var xhr = new XMLHttpRequest();
+
+xhr.open('POST', '/sortfiles', true);
+
+xhr.setRequestHeader('Content-Type', 'application/json');
+
+xhr.onload=function(){
+    json=JSON.parse(this.responseText);
+    if(view=='grid')
+    setDataGrid();
+    else
+    setDataList();
+    }
+xhr.send(jsonData);
+    document.getElementById('pathway').value=path;
+    document.getElementById("info1").innerHTML='';
+}
+else
+main()
+}
+
+setInterval(signincheck,30000);
+window.onpopstate = function(event){
+    backward();
 };
 function getFileIcon(extension) {
   const fileTypes = {
@@ -82,26 +282,334 @@ function getFileIcon(extension) {
     sql: 'fa-file-code text-yellow-500'
     // Add more file types as needed
   };
-  console.log(extension);
   return fileTypes[extension] || 'fa-file-fun text-red-700';
 }
-
 </script>
-<body class="flex h-screen bg-gray-900 text-white">
+<body class="flex h-screen bg-white text-black">
 <div class="flex flex-col flex-1 w-full overflow-y-auto">
-    <header class="z-10 py-4 lg:h-20 h-28 bg-gray-950">
+    <header class="z-10 py-4 lg:h-20 h-28 bg-[#1e4356]">
         <div class="container flex items-center justify-between h-full px-6 mx-auto">
-        <div onclick="window.location.href='signout';" class="hover:cursor-pointer absolute right-4">
-            <i class="lg:hidden fa-4x fa-solid fa-right-from-bracket"></i><i class="hidden lg:inline fa-solid fa-right-from-bracket"></i>
-            <div class="hidden lg:inline">Sign Out</div>
+            <h1 class="text-white text-3xl absolute left-4"><a href="index.html"><span>RFMS</span></a></h1>
+        <div class="absolute right-4">
+        <div onclick='uploadFileItem();' class="hover:cursor-pointer inline mr-4 hover:font-bold">
+            <i class="lg:hidden fa-3x fa-inverse fa-solid fa-file-arrow-up"></i><i class="hidden lg:inline fa-inverse fa-solid fa-file-arrow-up"></i>
+            <div class="hidden lg:inline text-white">Upload File</div>
+        </div>
+        <div onclick='uploadFolderItem();' class="hover:cursor-pointer inline mr-4 hover:font-bold">
+            <i class="lg:hidden fa-3x fa-inverse fa-solid fa-upload"></i><i class="hidden lg:inline fa-inverse fa-solid fa-upload"></i>
+            <div class="hidden lg:inline text-white">Upload Folder</div>
+        </div>
+        <div onclick='fetch("/signout");signincheck();' class="hover:cursor-pointer inline hover:font-bold">
+            <i class="lg:hidden fa-3x fa-inverse fa-solid fa-right-from-bracket"></i><i class="hidden lg:inline fa-inverse fa-solid fa-right-from-bracket"></i>
+            <div class="hidden lg:inline text-white">Sign Out</div>
+        </div>
         </div>
         </div>
     </header>
     <div id="full" class="h-full overflow-y-auto">
-    <div id="info0" class="h-10 drop-shadow-md border-black border-b"></div>
+    <div id="info0" class="h-12 sticky top-0 drop-shadow mb-6 ">
+    </div>
+    <div id="infolist" class="m-2 grid grid-cols-1 gap-4"></div>
     <div id="info" class="m-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    <div id="infomob" class=" m-2 grid grid-cols-2 gap-4"></div>
+    <div id="contextMenu" class="hidden absolute bg-white text-xl shadow-2xl rounded py-2">
+    <ul class="list-none">
+      <li id="uploadFileItem" class="px-4 py-2 hover:bg-cyan-50 hover:cursor-pointer"><i class="fa-solid fa-file-arrow-up"></i> Upload File</li>
+      <li id="uploadFolderItem" class="px-4 py-2 hover:bg-cyan-50 hover:cursor-pointer"><i class="fa-solid fa-upload"></i> Upload Folder</li>
+    </ul>
+    </div>
+    <div id="contextMenuItem" class="hidden absolute bg-white text-xl shadow-2xl rounded py-2">
+    <ul class="list-none">
+      <li id="openItem" class="px-4 py-2 hover:bg-cyan-50 hover:cursor-pointer"><i class="fa-solid fa-up-right-from-square"></i> Open</li>
+      <li id="itemDetails" class="px-4 py-2 hover:bg-cyan-50 hover:cursor-pointer"> <i class="fa-solid fa-info"></i> Details</li>
+      <li id="deleteItem" class="px-4 py-2 hover:bg-cyan-50 hover:cursor-pointer"><i class="fa-solid fa-trash"></i> Delete</li>
+      <li id="downloadItem" class="px-4 hidden py-2 hover:bg-cyan-50 hover:cursor-pointer"><i class="fa-solid fa-download"></i> Download</li>
+    </ul>
+    </div>
     <div id="info1" class="p-4"></div>
+        <div id="alertbox" class="fixed hidden inset-0 flex items-center justify-center">
+  <div class="bg-white shadow-2xl p-8 m-2 rounded-md relative">
+    <button onclick="document.getElementById('alertbox').classList.add('hidden');document.getElementById('alert').innerHTML='';" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <h1 id="alerthead" class="text-xl font-semibold"></h1>
+    <p id="alert"></p>
+  </div>
+</div>
     </div>
 </div>
 </body>
+<script>
+const myElement = document.getElementById('full');
+const contextMenu = document.getElementById('contextMenu');
+const contextMenuItem = document.getElementById('contextMenuItem');
+
+// Function to show the context menu
+function showContextMenu(event,file) {
+  if(view=='list')
+  var excludedElement = document.getElementById('infolist');
+  else
+  if(mobilecheck())
+  var excludedElement = document.getElementById('infomob');
+  else
+  var excludedElement = document.getElementById('info');
+  event.preventDefault();
+  if (!excludedElement.contains(event.target) || event.target===excludedElement ) {
+  contextMenuItem.style.display = 'none';
+  const pageWidth = window.innerWidth;
+  const pageHeight = window.innerHeight;
+  const menuWidth = 150
+  const menuHeight = 90
+  if(mobilecheck())
+  var posX = event.clientX + menuWidth > pageWidth ? event.clientX - (menuWidth*2) : event.clientX;
+  else
+  var posX = event.clientX + menuWidth > pageWidth ? event.clientX - menuWidth : event.clientX;
+  if(mobilecheck())
+  var posY = event.clientY + menuHeight > pageHeight ? event.clientY - (menuHeight*2) : event.clientY;
+  else
+  var posY = event.clientY + menuHeight > pageHeight ? event.clientY - menuHeight : event.clientY;
+  contextMenu.style.left = `${posX}px`;
+  contextMenu.style.top = `${posY}px`;
+  if(mobilecheck()){
+  contextMenu.style.left = `${posX/2}px`;
+  contextMenu.style.top = `${posY/2}px`;
+  }
+  contextMenu.style.display = 'block';
+  document.getElementById('uploadFileItem').onclick=function(){uploadFileItem();}
+  document.getElementById('uploadFolderItem').onclick=function(){uploadFolderItem();}
+  }
+}
+function uploadFileItem(){
+   if(document.getElementById('alertbox').classList.contains('hidden')){
+      document.getElementById('alertbox').classList.remove('hidden')
+      document.getElementById('alert').innerHTML='<form method="post" action="uploadfile" enctype="multipart/form-data"><input type="file" name="file" required/><input class="hover:cursor-pointer p-4 hover:bg-cyan-50 border border-black bg-white" type="submit" value="Upload File"></form>';
+      }
+  }
+function uploadFolderItem(){
+  if(document.getElementById('alertbox').classList.contains('hidden')){
+      document.getElementById('alertbox').classList.remove('hidden')
+      document.getElementById('alert').innerHTML='<form method="post" action="upload" enctype="multipart/form-data"><input name="folder" type="file" webkitdirectory directory multiple required/><input class="hover:cursor-pointer border border-black hover:bg-cyan-50 p-4 bg-white" type="submit" value="Upload Folder"></form>';
+  }
+}
+function showContextSubMenu(event,file) {
+  event.preventDefault();
+  contextMenu.style.display = 'none';
+  const pageWidth = window.innerWidth;
+  const pageHeight = window.innerHeight;
+  const menuWidth = 96;
+  const menuHeight = 40
+  if(mobilecheck())
+  var posX = event.clientX + menuWidth > pageWidth ? event.clientX - (menuWidth*2) - 100 : event.clientX;
+  else
+  var posX = event.clientX + menuWidth > pageWidth ? event.clientX - menuWidth : event.clientX;
+  if(mobilecheck())
+  var posY = event.clientY + menuHeight > pageHeight ? event.clientY - (menuHeight*2) : event.clientY;
+  else
+  var posY = event.clientY + menuHeight > pageHeight ? event.clientY - menuHeight : event.clientY;
+  contextMenuItem.style.left = `${posX}px`;
+  contextMenuItem.style.top = `${posY}px`;
+  if(mobilecheck()){
+  contextMenuItem.style.left = `${posX/2}px`;
+  contextMenuItem.style.top = `${posY/2}px`;
+  }
+  contextMenuItem.style.display = 'block';
+  document.getElementById('itemDetails').onclick=function(){
+  if(document.getElementById('alertbox').classList.contains('hidden')){
+  document.getElementById('alertbox').classList.remove('hidden')
+  i=file.getAttribute('index');
+  size=json[i].size/(1024);
+  document.getElementById('alerthead').innerHTML='Details';
+  document.getElementById('alert').innerHTML='<div class="flex flex-col space-y-2"><div class="flex items-center"><span class="text-gray-600 mr-2">'+
+  'Name:</span><span class="text-gray-900">'+json[i].name+'</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Size:</span>'+
+  '<span class="text-gray-900">'+size+'KB</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Location:</span>'+
+  '<span class="text-gray-900">'+json[i].path+'</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Type:</span>'+
+  '<span class="text-gray-900">'+json[i].type+'</span></div></div>';
+  }
+  }
+  if(file.getAttribute('type')=='folder'){
+  document.getElementById('openItem').onclick=function(){
+  i=file.getAttribute('index');
+  path+="/"+json[i].name;
+  foldah('filedat/'+file.getAttribute('path'));
+  }
+  }
+  else{
+  document.getElementById('openItem').onclick=function(){
+  i=file.getAttribute('index');
+  path+="/"+json[i].name;
+  openfile('openfile/'+file.getAttribute('path'));
+  }
+  }
+  if(file.getAttribute('type')=='folder'){
+  document.getElementById('deleteItem').onclick=function(){
+  window.location.href='deletefolder/'+file.getAttribute('path');
+  }
+  document.getElementById('downloadItem').classList.add('hidden');
+  }
+  else{
+  document.getElementById('deleteItem').onclick=function(){
+  window.location.href='delete/'+file.getAttribute('path');
+  }
+  document.getElementById('downloadItem').classList.remove('hidden');
+  document.getElementById('downloadItem').onclick=function(){
+  window.location.href='download/'+file.getAttribute('path');
+  }
+  }
+}
+// Function to hide the context menu
+function hideContextMenu() {
+  if(timeout!=undefined)
+  clearTimeout(timeout);
+  contextMenu.style.display = 'none';
+  contextMenuItem.style.display = 'none';
+}
+const dropArea = document.getElementById('full');
+
+// Prevent default behavior for dragover and drop events
+dropArea.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  if(document.getElementById('alertbox').classList.contains('hidden')){
+      document.getElementById('alertbox').classList.remove('hidden')
+      document.getElementById('alert').innerHTML='Drop Files To Upload';
+      }
+});
+
+dropArea.addEventListener('drop', (event) => {
+  event.preventDefault();
+
+  const files = event.dataTransfer.files;
+  uploadFiles(files);
+});
+
+// Function to upload files using AJAX POST
+function uploadFiles(files) {
+
+  for (let i = 0; i < files.length; i++) {
+    var formData = new FormData();
+    formData.append('file', files[i]);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'uploadfile', true);
+    xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      window.location.href=location.href;
+    }
+  };
+  xhr.send(formData);
+  }
+}
+function clickandhold(event){
+  myElement.addEventListener('mouseleave', hideContextMenu);
+  myElement.addEventListener('mouseup', hideContextMenu);
+timeout = setTimeout(() => {
+    myElement.removeEventListener('mouseup',hideContextMenu);
+    showContextMenu(event);
+  }, 500);
+};
+
+function getCommonExtensions(fileType) {
+  const extensions = {
+    Images: ['.png', '.jpg', '.jpeg', '.gif', '.bmp'],
+    Documents: ['.doc', '.docx', '.pdf', '.txt', '.rtf'],
+    Spreadsheets: ['.xls', '.xlsx', '.csv'],
+    Presentations: ['.ppt', '.pptx'],
+    Videos: ['.mp4', '.mov', '.avi', '.mkv'],
+    Audio: ['.mp3', '.wav', '.ogg'],
+    Archives: ['.zip', '.rar', '.tar', '.gz'],
+    Code: ['.html', '.css', '.js', '.php', '.py', '.java', '.cpp'],
+    Others: ['.exe', '.bin', '.dat', '.iso']
+  };
+
+  return extensions[fileType] || [];
+}
+
+
+
+myElement.addEventListener('mousedown', clickandhold);
+myElement.addEventListener('contextmenu', showContextMenu);
+if(mobilecheck())
+    {
+    document.getElementById('info0').classList.add('mb-28');
+    document.getElementById('info0').innerHTML='<div class="grid grid-rows-2">'+
+    '<div class="bg-slate-100 text-gray-800 px-4 py-1 h-20 pt-2 flex items-center justify-between">'+
+    '<div>'+
+      '<button id="backward" class="text-blue-500 hover:text-blue-600 mr-8 grayscale" onclick="backward();">'+
+        '<i class="fas fa-chevron-left text-4xl"></i>'+
+      '</button>'+
+      '<button id="forward" class="text-blue-500 hover:text-blue-600 grayscale" onclick="forward();">'+
+        '<i class="fas fa-chevron-right text-4xl"></i>'+
+      '</button>'+
+    '</div>'+
+    '<div>'+
+      '<i class="fa-solid fa-hard-drive text-blue-400 text-4xl"></i>'+
+      '<input class="py-2 ml-1 text-4xl rounded-lg focus:outline-none w-['+(window.innerWidth*(75/100))+'px] bg-slate-100" type="text" id="pathway"  readonly>'+
+    '</div>'+
+    '</div>'+
+    '<div class="bg-slate-100 text-gray-800 px-4 py-1 pt-2 h-20 flex items-center justify-between">'+
+    '<div>'+
+      '<i id="grid" onclick="view=\'grid\';this.classList.toggle(\'hidden\');document.getElementById(\'list\').classList.toggle(\'hidden\');avoid=0;backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);avoid=1" class="hidden fa-solid text-4xl fa-grip text-blue-500 hover:text-blue-600 m-2"></i>'+
+      '<i id="list" onclick="view=\'list\';this.classList.toggle(\'hidden\');document.getElementById(\'grid\').classList.toggle(\'hidden\');avoid=0;backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);avoid=1" class="fa-solid text-4xl fa-list text-blue-500 hover:text-blue-600 m-2"></i>'+
+    '</div>'+
+     '<div class="w-64 text-2xl">'+
+    '<select id="fileType" onchange="sortFile(this.value);" name="fileType" class="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">'+
+     '<option value="">Filter Files</option>'+
+      '<option value="Images">Images</option>'+
+      '<option value="Documents">Documents</option>'+
+      '<option value="Spreadsheets">Spreadsheets</option>'+
+      '<option value="Presentations">Presentations</option>'+
+      '<option value="Videos">Videos</option>'+
+      '<option value="Audio">Audio</option>'+
+     '<option value="Archives">Archives</option>'+
+    '<option value="Code">Code</option>'+
+   '<option value="Others">Others</option>'+
+  '</select>'+
+ '</div>'+
+    '<div class="pr-2 w-['+(window.innerWidth*(60/100))+'px] w rounded-lg bg-white">'+
+     '<input class="px-4 py-2 rounded-lg text-4xl focus:outline-none" type="text" placeholder="Search..." onkeyup="search(this.value);">'+
+      '<button class="text-blue-300">'+
+        '<i class="fas fa-search text-4xl"></i>'+
+      '</button>'+
+    '</div>'+
+  '</div></div>';
+    }
+    else
+    document.getElementById('info0').innerHTML='<div class="bg-slate-100 text-gray-800 px-4 py-1 pt-2 flex items-center justify-between">'+
+    '<div>'+
+      '<button id="backward" class="text-blue-500 hover:text-blue-600 mr-4 grayscale" onclick="backward();">'+
+        '<i class="fas fa-chevron-left"></i>'+
+      '</button>'+
+      '<button id="forward" class="text-blue-500 hover:text-blue-600 grayscale" onclick="forward();">'+
+        '<i class="fas fa-chevron-right"></i>'+
+      '</button>'+
+    '</div>'+
+    '<div>'+
+      '<i class="fa-solid fa-hard-drive text-blue-400"></i>'+
+      '<input class="py-2 rounded-lg focus:outline-none w-96 bg-slate-100" type="text" id="pathway"  readonly>'+
+      '<i id="grid" onclick="view=\'grid\';this.classList.toggle(\'hidden\');document.getElementById(\'list\').classList.toggle(\'hidden\');avoid=0;backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);avoid=1" class="hidden fa-solid fa-lg fa-grip text-blue-500 hover:text-blue-600 m-2"></i>'+
+      '<i id="list" onclick="view=\'list\';this.classList.toggle(\'hidden\');document.getElementById(\'grid\').classList.toggle(\'hidden\');avoid=0;backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);avoid=1" class="fa-solid fa-lg fa-list text-blue-500 hover:text-blue-600 m-2"></i>'+
+    '</div>'+
+    '<div class="w-64">'+
+    '<select id="fileType" onchange="sortFile(this.value);" name="fileType" class="w-full px-4 py-2 border border-gray-300 text-gray-800 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">'+
+     '<option value="">Filter Files</option>'+
+      '<option value="Images">Images</option>'+
+      '<option value="Documents">Documents</option>'+
+      '<option value="Spreadsheets">Spreadsheets</option>'+
+      '<option value="Presentations">Presentations</option>'+
+      '<option value="Videos">Videos</option>'+
+      '<option value="Audio">Audio</option>'+
+     '<option value="Archives">Archives</option>'+
+    '<option value="Code">Code</option>'+
+   '<option value="Others">Others</option>'+
+  '</select>'+
+ '</div>'+
+    '<div class="pr-2 rounded-lg bg-white">'+
+     '<input class="px-4 py-2 rounded-lg focus:outline-none" type="text" placeholder="Search..." onkeyup="search(this.value);">'+
+      '<button class="text-blue-300">'+
+        '<i class="fas fa-search"></i>'+
+      '</button>'+
+    '</div>'+
+  '</div>';
+window.onload=main;
+</script>
 </html>
