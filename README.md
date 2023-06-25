@@ -6,7 +6,7 @@
 <div align="center">
 
 
-<h3 align="center">Remote File Management Software</h3>
+<h1 align="center">Remote File Management Software</h1>
 
   <p align="center">
     A remote file management software is a computer program that allows users to manage and access their files remotely from a computer or other device over a network or the internet.
@@ -56,7 +56,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# About The Project
 
 The new remote file management software is an innovative solution that offers advanced file organization, server-side compression, and scalability. It allows users to efficiently manage their files with customizable folders and tags, as well as advanced search capabilities that make it easy to find specific files. Additionally, the server-side compression feature helps reduce the storage requirements for files, freeing up space and increasing efficiency.
 
@@ -70,7 +70,7 @@ Overall, the new remote file management software offers a comprehensive solution
 
 
 
-### Built With
+## Built With
 
 * [![Flask][Flask.py]][Flask-url]
 * [![Tailwind][Tailwind.css]][Tailwind-url]
@@ -124,21 +124,84 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+-->
 
 
-<!-- ROADMAP 
-## Roadmap
+# Features
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] User Management
+- [ ] File Management
+- [ ] File Organization
+- [ ] Searching
+- [ ] Sharing
+- [ ] File Compression
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+# Implementation and Architecture
 
+Developing a complete remote file management software involves multiple components and
+functionalities. Here is a high-level overview of the implementation steps and features that can
+be included:
+##  User Authentication and Authorization
+Implementing user registration and login functionality
+### User Registration
+1. Create a registration form where users can input their credentials, username and password.
+2. On form submission, validate and securely store the user’s credentials in a database.
+
+### User Login
+1. Create a login form where users can enter their credentials.
+2. On form submission, validate the provided credentials against the stored values in the
+database and If the credentials are valid, generate a new unique token for the user.
+3. Store the token as a cookie in the user’s browser, setting an expiration time if desired and
+associate the token with the user in the server-side storage
+
+### Access Control
+1. For protected resources or pages, check if the user has a valid token in their cookie.
+2. On each request, retrieve the token from the user’s cookie and validate it against the serverside storage and if the token is valid and matches the user, grant access to the requested resource.
+3. If the token is invalid or expired, redirect the user to the login page.
+
+### Logout
+1. Provide a logout functionality where users can terminate their session.
+2. On logout, remove the token from the user’s cookie and invalidate it on the server-side.
+3. Redirect the user to the login page.
+
+## File Upload and Storage
+•Allows users to upload files from their local devices.
+•Implementing server-side file storage and organization.
+
+## File Management
+• Provide a user interface to browse, view, and manage files and folders allow users to upload
+and delete files and folders.
+• Implemented search functionality to find files based on name and types.
+
+
+## File Compression
+File compression is implemented by using the zlib algorithm, which is a widely used compression algorithm that provides lossless data compression.At its core, zlib uses the DEFLATE
+algorithm, which combines LZ77 (a sliding window compression algorithm) and Huffman coding (a variable-length prefix coding algorithm).Steps involved in zlib compression:
+### Deflate Compression
+1. The data to be compressed is divided into a series of blocks.
+2. Within each block, LZ77 compression is applied to find repeated sequences of data. Instead
+of storing the complete repeated sequence, LZ77 uses a combination of a backward reference
+(offset) and a length to represent the repeated data.
+3. The compressed LZ77 data is then passed through Huffman coding, where fixed and dynamic Huffman tables are used to assign shorter codes to frequently occurring symbols and
+longer codes to less frequent symbols so it reduces the size of compressed data.
+
+### Compression Ratio and Efficiency
+1. The compression ratio achieved by zlib depends on the nature of the input data. Highly
+repetitive or redundant data tends to compress better, while already compressed data or random
+data may not compress significantly.
+2. The efficiency of zlib compression is attributed to the combination of LZ77 and Huffman
+coding. LZ77 finds repeated patterns and replaces them with references, and Huffman coding
+assigns shorter codes to more frequent symbols, resulting in effective compression.
+### Decompression
+1. The zlib algorithm also supports decompression of the compressed data.
+2. The compressed data is processed in reverse: Huffman decoding is applied to obtain the
+compressed LZ77 data, and then LZ77 decompression reconstructs the original data by resolving the backward references.
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -181,9 +244,13 @@ Project Link: [Remote-File-Management](https://github.com/Dhinuku/Remote-File-Ma
 <!-- ACKNOWLEDGMENTS -->
 ## References
 
-* []()
-* []()
-* []()
+* [IEEE](https://ieeexplore.ieee.org/Xplore/home.jsp)
+* [Flask documentation](https://flask.palletsprojects.com/en/2.2.x/)
+* [Stackoverflow](https://stackoverflow.com/)
+* [AWS](https://docs.aws.amazon.com/)
+* [Python](https://docs.python.org/3/)
+* [Google Drive](https://developers.google.com/drive)
+* [DropBox](https://www.dropbox.com/developers/documentation)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
