@@ -137,8 +137,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 Developing a complete remote file management software involves multiple components and
 functionalities. Here is a high-level overview of the implementation steps and features that can
 be included:
+
 ##  User Authentication and Authorization
 Implementing user registration and login functionality
+
 ### User Registration
 1. Create a registration form where users can input their credentials, username and password.
 2. On form submission, validate and securely store the user’s credentials in a database.
@@ -161,12 +163,11 @@ associate the token with the user in the server-side storage
 3. Redirect the user to the login page.
 
 ## File Upload and Storage
-•Allows users to upload files from their local devices.
+•Allows users to upload files from their local devices.<br>
 •Implementing server-side file storage and organization.
 
 ## File Management
-• Provide a user interface to browse, view, and manage files and folders allow users to upload
-and delete files and folders.
+• Provide a user interface to browse, view, and manage files and folders allow users to upload and delete files and folders.<br>
 • Implemented search functionality to find files based on name and types.
 
 
