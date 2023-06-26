@@ -35,17 +35,12 @@
       <ul>
         <li><a href="#built-with">Built With</a></li>
       </ul>
-    </li><!--
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
--->
+    <li>
+      <a href="#installation">Installation</a>
+    </li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#implementation">Implementation</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -94,22 +89,18 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   npm install npm@latest -g
   ```
-
+--->
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+1.Go to releases (v1.0) (https://github.com/Dhinuku/Remote-File-Management/releases)
+2.Download RFMS.zip and README.md
+3.Follow the instructions specified in the README.md and set up the application
+
+Note: Ensure that you have the necessary permissions to access the specified paths and make sure to provide accurate file and directory paths in the configuration files.
+If you encounter any issues or have any questions, please contact our support team for assistance.
+
+Thank you for using our application!
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -161,7 +152,7 @@ associate the token with the user in the server-side storage
 
 ### Access Control
 1. For protected resources or pages, check if the user has a valid token in their cookie.
-2. On each request, retrieve the token from the user’s cookie and validate it against the serverside storage and if the token is valid and matches the user, grant access to the requested resource.
+2. On each request, retrieve the token from the user’s cookie and validate it against the serverside storage and if the token is valid and matches the user, grant access to the requested resource.
 3. If the token is invalid or expired, redirect the user to the login page.
 
 ### Logout
@@ -182,15 +173,15 @@ and delete files and folders.
 ## File Compression
 <img src="deflate_process.png">
   <br><hr>
-File compression is implemented by using the zlib algorithm, which is a widely used compression algorithm that provides lossless data compression.At its core, zlib uses the DEFLATE
-algorithm, which combines LZ77 (a sliding window compression algorithm) and Huffman coding (a variable-length prefix coding algorithm).Steps involved in zlib compression:
+File compression is implemented by using the zlib algorithm, which is a widely used compression algorithm that provides lossless data compression.At its core, zlib uses the DEFLATE
+algorithm, which combines LZ77 (a sliding window compression algorithm) and Huffman coding (a variable-length prefix coding algorithm).Steps involved in zlib compression:
 
 ### Deflate Compression
 1. The data to be compressed is divided into a series of blocks.
 2. Within each block, LZ77 compression is applied to find repeated sequences of data. Instead
 of storing the complete repeated sequence, LZ77 uses a combination of a backward reference
 (offset) and a length to represent the repeated data.
-3. The compressed LZ77 data is then passed through Huffman coding, where fixed and dynamic Huffman tables are used to assign shorter codes to frequently occurring symbols and
+3. The compressed LZ77 data is then passed through Huffman coding, where fixed and dynamic Huffman tables are used to assign shorter codes to frequently occurring symbols and
 longer codes to less frequent symbols so it reduces the size of compressed data.
 
 ### Compression Ratio and Efficiency
@@ -203,7 +194,7 @@ assigns shorter codes to more frequent symbols, resulting in effective compressi
 ### Decompression
 1. The zlib algorithm also supports decompression of the compressed data.
 2. The compressed data is processed in reverse: Huffman decoding is applied to obtain the
-compressed LZ77 data, and then LZ77 decompression reconstructs the original data by resolving the backward references.
+compressed LZ77 data, and then LZ77 decompression reconstructs the original data by resolving the backward references.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
