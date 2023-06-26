@@ -228,8 +228,6 @@ def upload3():
             path = os.path.dirname(path)
         path+=r'/'
         f = request.files['file']
-        if get_folder_size(main_path + r'/' + get_user)>10000000 or (10000000-get_folder_size(main_path + r'/' + get_user))<int(request.headers['Content-Length']):
-            return redirect('/dashboard')
         file=open(os.path.join(path, secure_filename(f.filename)),"wb")
         file.write(zlib.compress(f.read(),level=9))
         file.close()
