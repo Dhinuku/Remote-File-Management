@@ -124,8 +124,6 @@ def signup1():
     for d in user_details:
         if d["user"] == usr:
             return "User exists try another name"
-    if len(user_details)>=10:
-        return "Max User Limit Try again Later"
     user_details.append({"user": usr, "password": psw})
     f = open('user_details.txt', 'w')
     json.dump(user_details, f)
@@ -188,8 +186,6 @@ def upload1():
             path = os.path.dirname(path)
         path+=r'/'
         f = request.files.getlist('folder')
-        if get_folder_size(main_path + r'/' + get_user)>10000000 or (10000000-get_folder_size(main_path + r'/' + get_user))<int(request.headers['Content-Length']):
-            return redirect('/dashboard')
         for file in f:
             vari = file.filename
             vari = vari.replace('/', '/')
