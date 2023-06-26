@@ -13,21 +13,21 @@ from werkzeug.utils import secure_filename
 def folder(path,filename):
     if filename!='':
         filename+='/'
-        path=path+r'\\'+filename
+        path=path+r'/'+filename
     var='['
     for i in os.listdir(path):
-        if os.path.isfile(path + r'\\' + i):
-            var +='{"name":"'+i+'","size":'+str(os.path.getsize(path + r'\\' + i))+',"type":"'+pathlib.Path(path + r'\\' + i).suffix+'","path":"'+filename+i+'"},'
+        if os.path.isfile(path + r'/' + i):
+            var +='{"name":"'+i+'","size":'+str(os.path.getsize(path + r'/' + i))+',"type":"'+pathlib.Path(path + r'/' + i).suffix+'","path":"'+filename+i+'"},'
         else:
-            var +='{"name":"'+i+'","size":'+str(os.path.getsize(path + r'\\' + i))+',"type":"folder","path":"'+filename+i+'"},'
+            var +='{"name":"'+i+'","size":'+str(os.path.getsize(path + r'/' + i))+',"type":"folder","path":"'+filename+i+'"},'
     var+='{"name":"no"}]'
     return var
-
-
+os.chdir('rfms-main')
+print(os.getcwd())
 if os.path.exists('user_details.txt') and os.path.exists('MainDirectory.txt') and os.path.exists('main_path.txt'):
     print("CriticalFileCheck")
 else:
-    input("MissingFiles")
+    print("Missing One")
     sys.exit()
 f = open('user_details.txt')
 user_details = json.load(f)
@@ -38,7 +38,7 @@ f.close()
 if os.path.exists(main_path):
     print("StorageDirectoryExists")
 else:
-    input("StorageDirectoryMissing")
+    print("Missing Two")
     sys.exit()
 Sessions = []
 Session_Tokens=[]
@@ -124,6 +124,8 @@ def signup1():
     for d in user_details:
         if d["user"] == usr:
             return "User exists try another name"
+    if len(user_details)>=10:
+        return "Max User Limit Try again Later"
     user_details.append({"user": usr, "password": psw})
     f = open('user_details.txt', 'w')
     json.dump(user_details, f)
@@ -137,7 +139,7 @@ def filedata(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user
+        path = main_path + r'/' + get_user
         var = folder(path, filename)
         return var
     else:
@@ -149,7 +151,7 @@ def filedat():
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user
+        path = main_path + r'/' + get_user
         var = folder(path, '')
         return var
     else:
@@ -176,15 +178,25 @@ def upload1():
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\'
+        p_path = request.form['path']
+        if get_user.upper()+'\'s_Disk:' in p_path:
+            p_path=p_path.replace(get_user.upper()+'\'s_Disk:','');
+        elif 'Search:' in p_path or 'Sort:' in p_path :
+            p_path=''
+        path = main_path + r'/' + get_user + p_path
+        if os.path.isfile(path):
+            path = os.path.dirname(path)
+        path+=r'/'
         f = request.files.getlist('folder')
+        if get_folder_size(main_path + r'/' + get_user)>10000000 or (10000000-get_folder_size(main_path + r'/' + get_user))<int(request.headers['Content-Length']):
+            return redirect('/dashboard')
         for file in f:
             vari = file.filename
-            vari = vari.replace('/', '\\')
-            makit = vari.split('\\')
+            vari = vari.replace('/', '/')
+            makit = vari.split('/')
             if not os.path.exists(path + makit[0]):
                 os.mkdir(path + makit[0])
-            varit = vari.rsplit('\\', 1)
+            varit = vari.rsplit('/', 1)
             varity = varit[len(varit) - 2]
             if os.path.exists(path + varity):
                 filer = open(os.path.join(path,vari),"wb")
@@ -195,7 +207,7 @@ def upload1():
                 filer = open(os.path.join(path,vari),"wb")
                 filer.write(zlib.compress(file.read()))
                 filer.close()
-        return redirect('/dashboard')
+        return "SUCCESS"
     else:
         return 'ERROR'
 
@@ -210,14 +222,22 @@ def upload3():
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user
+        p_path = request.form['path']
+        if get_user.upper()+'\'s_Disk:' in p_path:
+            p_path=p_path.replace(get_user.upper()+'\'s_Disk:','');
+        elif 'Search:' in p_path or 'Sort:' in p_path :
+            p_path=''
+        path = main_path + r'/' + get_user + p_path
+        if os.path.isfile(path):
+            path = os.path.dirname(path)
+        path+=r'/'
         f = request.files['file']
-        if get_folder_size(main_path + r'\\' + get_user)>5000000 or (5000000-get_folder_size(main_path + r'\\' + get_user))<int(request.headers['Content-Length']):
+        if get_folder_size(main_path + r'/' + get_user)>10000000 or (10000000-get_folder_size(main_path + r'/' + get_user))<int(request.headers['Content-Length']):
             return redirect('/dashboard')
         file=open(os.path.join(path, secure_filename(f.filename)),"wb")
         file.write(zlib.compress(f.read(),level=9))
         file.close()
-        return redirect('/dashboard')
+        return "SUCCESS"
     else:
         return 'ERROR'
 
@@ -227,8 +247,8 @@ def download(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\' + filename
-        varit = filename.rsplit('\\', 1)
+        path = main_path + r'/' + get_user + r'/' + filename
+        varit = filename.rsplit('/', 1)
         varity = varit[len(varit) - 1]
         f=open(path,"rb")
         ff=io.BytesIO(zlib.decompress(f.read()))
@@ -257,7 +277,7 @@ def delete(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\' + filename
+        path = main_path + r'/' + get_user + r'/' + filename
         os.remove(path)
         return redirect('/dashboard')
     else:
@@ -269,7 +289,7 @@ def deletefolder(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\' + filename
+        path = main_path + r'/' + get_user + r'/' + filename
         shutil.rmtree(path)
         return redirect('/dashboard')
     else:
@@ -281,7 +301,7 @@ def compress(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\' + filename
+        path = main_path + r'/' + get_user + r'/' + filename
         shutil.make_archive(path, 'zip', path)
         return redirect('/dashboard')
     else:
@@ -293,10 +313,10 @@ def openfile(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user + r'\\' + filename
+        path = main_path + r'/' + get_user + r'/' + filename
         f=open(path,"rb")
         ff=io.BytesIO(zlib.decompress(f.read()))
-        varit = filename.rsplit('\\', 1)
+        varit = filename.rsplit('/', 1)
         varity = varit[len(varit) - 1]
         return send_file(ff,download_name=varity)
     else:
@@ -312,13 +332,12 @@ def signcheck():
     else:
         return "0"
 
-
 @app.route('/search/<path:filename>', methods=['GET', 'POST'])
 def search(filename):
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user
+        path = main_path + r'/' + get_user
         var='['
         var+=search_folder(path,'',filename,'')
         var+='{"name":"no"}]'
@@ -330,17 +349,17 @@ def search(filename):
 def search_folder(path, filename,search_term,carry):
     carry+=filename+'/'
     if filename != '':
-        path = path + r'\\' + filename
+        path = path + r'/' + filename
     var = ''
     for i in os.listdir(path):
         if i.lower().startswith(search_term.lower()):
-            if os.path.isfile(path + r'\\' + i):
-                var += '{"name":"' + i + '","size":' + str(os.path.getsize(path + r'\\' + i)) + ',"type":"' + pathlib.Path(
-                    path + r'\\' + i).suffix + '","path":"' + carry + i + '"},'
+            if os.path.isfile(path + r'/' + i):
+                var += '{"name":"' + i + '","size":' + str(os.path.getsize(path + r'/' + i)) + ',"type":"' + pathlib.Path(
+                    path + r'/' + i).suffix + '","path":"' + carry + i + '"},'
             else:
                 var += '{"name":"' + i + '","size":' + str(
-                    get_folder_size(path + r'\\' + i)) + ',"type":"folder","path":"' + carry + i + '"},'
-        if not os.path.isfile(path + r'\\' + i):
+                    get_folder_size(path + r'/' + i)) + ',"type":"folder","path":"' + carry + i + '"},'
+        if not os.path.isfile(path + r'/' + i):
             var+=search_folder(path,i,search_term,carry)
     return var
 
@@ -348,13 +367,13 @@ def search_folder(path, filename,search_term,carry):
 def sortfiletypes(path, filename,search_term,carry):
     carry+=filename+'/'
     if filename != '':
-        path = path + r'\\' + filename
+        path = path + r'/' + filename
     var = ''
     for i in os.listdir(path):
-        if os.path.isfile(path + r'\\' + i):
-            if pathlib.Path(path + r'\\' + i).suffix in search_term:
-                var += '{"name":"' + i + '","size":' + str(os.path.getsize(path + r'\\' + i)) + ',"type":"' + pathlib.Path(
-                    path + r'\\' + i).suffix + '","path":"' + carry + i + '"},'
+        if os.path.isfile(path + r'/' + i):
+            if pathlib.Path(path + r'/' + i).suffix in search_term:
+                var += '{"name":"' + i + '","size":' + str(os.path.getsize(path + r'/' + i)) + ',"type":"' + pathlib.Path(
+                    path + r'/' + i).suffix + '","path":"' + carry + i + '"},'
         else:
             var+=sortfiletypes(path,i,search_term,carry)
     return var
@@ -373,11 +392,11 @@ def get_folder_size(folder_path):
 
 @app.route('/sortfiles', methods=['POST'])
 def sortfiles():
-    json_data = request.get_json()
+    json_data=request.get_json()
     get_user = request.cookies.get('user')
     get_token = request.cookies.get('token')
     if get_user in Sessions and get_token in Session_Tokens:
-        path = main_path + r'\\' + get_user
+        path = main_path + r'/' + get_user
         var = '['
         var += sortfiletypes(path, '', json_data, '')
         var += '{"name":"no"}]'
@@ -388,20 +407,38 @@ def sortfiles():
 
 @app.route('/reset', methods=['GET'])
 def reset():
-    global user_details
-    for i in user_details:
-        path=main_path+r'\\'+i["user"]
-        shutil.rmtree(path)
-    user_details=[]
     global Sessions
     global Session_Tokens
-    Session_Tokens=[]
+    global user_details
+    for i in user_details:
+        path=main_path+r'/'+i["user"]
+        shutil.rmtree(path)
+    user_details=[]
     Sessions=[]
+    Session_Tokens=[]
     f = open('user_details.txt', 'w')
     json.dump(user_details, f)
     f.close()
     return "Resetted"
 
 
-if __name__ == '__main__':
-    app.run('0.0.0.0',80)
+@app.route('/deleteuser', methods=['GET'])
+def deleteuser():
+    get_user = request.cookies.get('user')
+    get_token = request.cookies.get('token')
+    if get_user in Sessions and get_token in Session_Tokens:
+        path = main_path + r'/' + get_user
+        shutil.rmtree(path)
+        global user_details
+        for d in user_details:
+            if d["user"] == get_user:
+                user_details.remove(d)
+                break
+        f = open('user_details.txt', 'w')
+        json.dump(user_details, f)
+        f.close()
+        Sessions.remove(get_user)
+        Session_Tokens.remove(get_token)
+        return "Account Permanently Deleted"
+    else:
+        return "ERROR"
