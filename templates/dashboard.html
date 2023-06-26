@@ -246,7 +246,7 @@ xhr.send(jsonData);
     document.getElementById("info1").innerHTML='';
 }
 else
-main()
+main();
 }
 
 setInterval(signincheck,30000);
@@ -264,6 +264,7 @@ function getFileIcon(extension) {
     ppt: 'fa-file-powerpoint text-orange-500',
     pptx: 'fa-file-powerpoint text-orange-500',
     jpg: 'fa-file-image text-yellow-500',
+    JPG: 'fa-file-image text-yellow-500',
     jpeg: 'fa-file-image text-yellow-500',
     png: 'fa-file-image text-yellow-500',
     gif: 'fa-file-image text-yellow-500',
@@ -289,7 +290,7 @@ function getFileIcon(extension) {
 <div class="flex flex-col flex-1 w-full overflow-y-auto">
     <header class="z-10 py-4 lg:h-20 h-28 bg-[#1e4356]">
         <div class="container flex items-center justify-between h-full px-6 mx-auto">
-            <h1 class="text-white text-3xl absolute left-4"><a href="index.html"><span>RFMS</span></a></h1>
+            <h1 class="text-white text-3xl absolute left-4"><a href="index"><span>RFMS</span></a></h1>
         <div class="absolute right-4">
         <div onclick='uploadFileItem();' class="hover:cursor-pointer inline mr-4 hover:font-bold">
             <i class="lg:hidden fa-3x fa-inverse fa-solid fa-file-arrow-up"></i><i class="hidden lg:inline fa-inverse fa-solid fa-file-arrow-up"></i>
@@ -384,13 +385,58 @@ function showContextMenu(event,file) {
 function uploadFileItem(){
    if(document.getElementById('alertbox').classList.contains('hidden')){
       document.getElementById('alertbox').classList.remove('hidden')
-      document.getElementById('alert').innerHTML='<form method="post" action="uploadfile" enctype="multipart/form-data"><input type="file" name="file" required/><input class="hover:cursor-pointer p-4 hover:bg-cyan-50 border border-black bg-white" type="submit" value="Upload File"></form>';
+      document.getElementById('alert').innerHTML='<form id="myForm1" method="post" action="uploadfile" enctype="multipart/form-data"><input type="file" name="file" required/><input type="text" name="path" value="'+path+'" hidden/><button class="hover:cursor-pointer p-4 hover:bg-cyan-50 border border-black bg-white" id="submitButton1">Submit</button></form>';
+    var submitButton = document.getElementById('submitButton1');
+    submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    var form = document.getElementById('myForm1');
+    var xhr = new XMLHttpRequest();
+    xhr.open(form.method, form.action, true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        document.getElementById('alert').innerHTML='Upload Successful';
+        avoid=0;
+        backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);
+        avoid=1;
+      } else {
+        console.log(xhr.responseText);
+      }
+    };
+    xhr.onerror = function() {
+      console.log('Request failed.');
+    };
+    xhr.send(new FormData(form));
+    document.getElementById('alert').innerHTML='<i class="fa-solid fa-cog fa-spin fa-spin-reverse"></i>';
+    });
       }
   }
 function uploadFolderItem(){
   if(document.getElementById('alertbox').classList.contains('hidden')){
       document.getElementById('alertbox').classList.remove('hidden')
-      document.getElementById('alert').innerHTML='<form method="post" action="upload" enctype="multipart/form-data"><input name="folder" type="file" webkitdirectory directory multiple required/><input class="hover:cursor-pointer border border-black hover:bg-cyan-50 p-4 bg-white" type="submit" value="Upload Folder"></form>';
+      document.getElementById('alert').innerHTML='<form id="myForm2" method="post" action="upload" enctype="multipart/form-data"><input type="text" name="path" value="'+path+'" hidden/><input name="folder" type="file" webkitdirectory directory multiple required/><button class="hover:cursor-pointer p-4 hover:bg-cyan-50 border border-black bg-white" id="submitButton2">Submit</button></form>';
+    var submitButton = document.getElementById('submitButton2');
+    submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    var form = document.getElementById('myForm2');
+    var xhr = new XMLHttpRequest();
+    xhr.open(form.method, form.action,true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        document.getElementById('alert').innerHTML='Upload Successful';
+        avoid=0;
+        backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);
+        avoid=1;
+      } else {
+        console.log(xhr.responseText);
+      }
+    };
+    xhr.onerror = function() {
+      console.log('Request failed.');
+    };
+    xhr.send(new FormData(form));
+    document.getElementById('alert').innerHTML='<i class="fa-solid fa-cog fa-spin fa-spin-reverse"></i>';
+    });
+
   }
 }
 function showContextSubMenu(event,file) {
@@ -423,7 +469,7 @@ function showContextSubMenu(event,file) {
   document.getElementById('alerthead').innerHTML='Details';
   document.getElementById('alert').innerHTML='<div class="flex flex-col space-y-2"><div class="flex items-center"><span class="text-gray-600 mr-2">'+
   'Name:</span><span class="text-gray-900">'+json[i].name+'</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Size:</span>'+
-  '<span class="text-gray-900">'+size+'KB</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Location:</span>'+
+  '<span class="text-gray-900">'+size.toFixed(2)+'KB</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Location:</span>'+
   '<span class="text-gray-900">'+json[i].path+'</span></div><div class="flex items-center"><span class="text-gray-600 mr-2">Type:</span>'+
   '<span class="text-gray-900">'+json[i].type+'</span></div></div>';
   }
@@ -444,13 +490,35 @@ function showContextSubMenu(event,file) {
   }
   if(file.getAttribute('type')=='folder'){
   document.getElementById('deleteItem').onclick=function(){
-  window.location.href='deletefolder/'+file.getAttribute('path');
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET','deletefolder/'+file.getAttribute('path'));
+  xhr.onload=function(){
+  if(document.getElementById('alertbox').classList.contains('hidden'))
+      document.getElementById('alertbox').classList.remove('hidden');
+  document.getElementById('alert').innerHTML='Deleted';
+  avoid=0;
+  backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);
+  avoid=1;
+  }
+  xhr.send();
+  document.getElementById('alert').innerHTML='<i class="fa-solid fa-cog fa-spin fa-spin-reverse"></i>';
   }
   document.getElementById('downloadItem').classList.add('hidden');
   }
   else{
   document.getElementById('deleteItem').onclick=function(){
-  window.location.href='delete/'+file.getAttribute('path');
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET','delete/'+file.getAttribute('path'));
+  xhr.onload=function(){
+  if(document.getElementById('alertbox').classList.contains('hidden'))
+      document.getElementById('alertbox').classList.remove('hidden');
+  document.getElementById('alert').innerHTML='Deleted';
+  avoid=0;
+  backward_queue[backward_queue.length-1][0](backward_queue[backward_queue.length-1][1]);
+  avoid=1;
+  }
+  xhr.send();
+  document.getElementById('alert').innerHTML='<i class="fa-solid fa-cog fa-spin fa-spin-reverse"></i>';
   }
   document.getElementById('downloadItem').classList.remove('hidden');
   document.getElementById('downloadItem').onclick=function(){
