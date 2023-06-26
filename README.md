@@ -92,9 +92,9 @@ This is an example of how to list things you need to use the software and how to
 --->
 ### Installation
 
-1.Go to releases (v1.0) (https://github.com/Dhinuku/Remote-File-Management/releases)
-2.Download RFMS.zip and README.md
-3.Follow the instructions specified in the README.md and set up the application
+1. Go to releases (v1.0) (https://github.com/Dhinuku/Remote-File-Management/releases)
+2. Download RFMS.zip and README.md
+3. Follow the instructions specified in the README.md and set up the application
 
 Note: Ensure that you have the necessary permissions to access the specified paths and make sure to provide accurate file and directory paths in the configuration files.
 If you encounter any issues or have any questions, please contact our support team for assistance.
